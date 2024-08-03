@@ -1,0 +1,15 @@
+------Restaurants-------
+GET http://127.0.0.1:3000/api/restaurants
+POST http://127.0.0.1:3000/api/restaurants
+GET http://127.0.0.1:3000/api/restaurants/:id
+DELETE http://127.0.0.1:3000/api/restaurants/:id
+PATCH http://127.0.0.1:3000/api/restaurants/:id
+PUT http://127.0.0.1:3000/api/restaurants/:id
+
+------Dishes---------
+GET http://127.0.0.1:3000/api/restaurants/:restaurantId/dishes
+POST http://127.0.0.1:3000/api/restaurants/:restaurantId/dishes
+GET http://127.0.0.1:3000/api/restaurants/:restaurantId/dishes/:dishId
+DELETE http://127.0.0.1:3000/api/restaurants/:restaurantId/dishes/:dishId
+PATCH http://127.0.0.1:3000/api/restaurants/:restaurantId/dishes/:dishId
+PUT http://127.0.0.1:3000/api/restaurants/:restaurantId/dishes/:dishId
