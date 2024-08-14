@@ -1,0 +1,8 @@
+<div id="order">
+    <h1 class="heading">Login</h1>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <input type="text" class="inp_box" placeholder="Username" formControlName="username">
+        <input type="password" class="inp_box" placeholder="Passowrd" formControlName="password">
+        <button class="btn2">Login</button>
+    </form>
+</div>

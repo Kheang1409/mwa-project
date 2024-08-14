@@ -1,0 +1,19 @@
+<div id="menu-dish">
+    <div class="heading">
+        <h1>{{dishes.length | custom }}</h1>
+        <button class="btn2" (click)="addNewDish()">Add New Dish</button>
+
+    </div>
+    <div class="card" *ngFor="let dish of dishes">
+        <img src="{{dish.picture}}">
+        <div class="details">
+            <div class="details-sub">
+                <h5>{{dish.title}}</h5>
+                <h5 class="price">{{dish.price | currency }} </h5>
+            </div>
+            <p>
+                {{dish.description}}
+            </p>
+        </div>
+    </div>
+</div>

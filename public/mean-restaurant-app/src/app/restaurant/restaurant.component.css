@@ -1,0 +1,17 @@
+.restaurant-background {
+    background-image: var(--background);
+    background-position: center;
+    background-size: cover;
+    height: 40vh;
+}
+
+#restaurant-home {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    padding: 100px 200px;
+    color: #fff;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

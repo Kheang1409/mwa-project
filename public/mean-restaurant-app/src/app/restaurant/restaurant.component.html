@@ -1,0 +1,27 @@
+<!-- <div class="restaurant-background"
+    [ngStyle]="{'background-image': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)), url(' + restaurant.logo + ')'}">
+    <div class="overlay ">
+        <section id="restaurant-home">
+            <h1 class="h-primary">Welcome to {{restaurant.name}}</h1>
+            <br>
+            <p>{{restaurant.about}}</p>
+        </section>
+    </div>
+</div>
+<app-dishes [dishes]="restaurant.dishes"></app-dishes> -->
+
+<div id="about">
+    <h1 class="title">About {{restaurant.name}}</h1>
+    <div class="about_row">
+        <div class="about_column">
+            <p>{{restaurant.about}}</p>
+            <p>Published in: {{restaurant.publishedYear}}</p>
+            <p>Location: {{restaurant.location.city}}, {{restaurant.location.country}}</p>
+        </div>
+        <div class="about_column">
+            <img src="{{restaurant.logo}}" alt="">
+        </div>
+    </div>
+    <app-dishes [dishes]="restaurant.dishes"></app-dishes>
+
+</div>

@@ -1,0 +1,20 @@
+<div id="menu">
+    <div class="heading">
+        <h1>Restaurants</h1>
+    </div>
+    <div class="card" *ngFor="let restaurant of restaurants">
+        <img src="{{restaurant.logo}}">
+        <div class="details">
+            <div class="details-sub">
+                <h5>{{restaurant.name}}, {{restaurant.location.city}}.</h5>
+            </div>
+            <p>{{ restaurant.about | slice:0:100 }}{{ restaurant.about.length > 100 ? '...' : '' }}</p>
+            <a class='hover-pointer' href="/restaurant/{{restaurant._id}}">learn more</a>
+        </div>
+    </div>
+</div>
+<div class="pagination">
+    <button class="hover-pointer" (click)="previouse()" [disabled]="previouseDisable"> prev </button>
+    <label>{{page}}/{{total_page}}</label>
+    <button class="hover-pointer" (click)="next()" [disabled]="nextDisable"> next </button>
+</div>

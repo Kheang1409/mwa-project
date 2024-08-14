@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const callBackify = require('util').callbackify;
-require('dotenv').config();
-
-require('../restaurants/restaurant-model')
+require('../components/restaurants/restaurant-model')
+require('../components/users/user-model')
 
 const disconnectedCallback = callBackify(mongoose.disconnect);
 

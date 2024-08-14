@@ -1,0 +1,13 @@
+<div id="order">
+    <h1 class="heading">Create Dish
+    </h1>
+
+    <form (ngSubmit)="create()" #dishForm="ngForm" class="create-form">
+        <input type="text" name="title" class="inp_box" placeholder="Title" [(ngModel)]="dish.title">
+        <input type="text" name="price" class="inp_box" placeholder="Price" [(ngModel)]="dish.price">
+        <input type="text" name="picture" class="inp_box" placeholder="picture" [(ngModel)]="dish.picture">
+        <textarea type="text" name="description" class="inp_box text_area" placeholder="Description"
+            [(ngModel)]="dish.description"></textarea>
+        <button class="btn2" type="submit">Submit</button>
+    </form>
+</div>

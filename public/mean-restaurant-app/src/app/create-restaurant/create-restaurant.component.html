@@ -1,0 +1,17 @@
+<div id="order">
+    <h1 class="heading">Create Restaurant
+    </h1>
+
+    <form (ngSubmit)="create(restaurantForm)" #restaurantForm="ngForm" class="create-form">
+        <input type="text" name="name" class="inp_box" placeholder="Name" ngModel>
+        <input type="text" name="publishedYear" class="inp_box" placeholder="published Year" ngModel>
+        <textarea type="text" name="about" class="inp_box text_area" placeholder="About Restaurant" ngModel></textarea>
+        <input type="text" name="logo" class="inp_box" placeholder="Logo" ngModel>
+        <h4 class="form-label">Location:</h4>
+        <input type="text" name="city" class="inp_box" placeholder="City" ngModel>
+        <input type="text" name="state" class="inp_box" placeholder="State" ngModel>
+        <input type="text" name="country" class="inp_box" placeholder="Country" ngModel>
+
+        <button class="btn2" type="submit">Submit</button>
+    </form>
+</div>
