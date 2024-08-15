@@ -74,6 +74,27 @@ a:hover {
     padding: 1rem 2rem;
 }
 
+.btn-danger:hover {
+    margin-top: 30px;
+
+    color: red;
+    cursor: pointer;
+    border-radius: 25px;
+    padding: 1rem 2rem;
+    background-color: white;
+}
+
+.btn-danger {
+    margin-top: 30px;
+
+    color: wheat;
+    cursor: pointer;
+    border-radius: 25px;
+    padding: 1rem 2rem;
+    background-color: red;
+    margin-left: 1.5rem;
+}
+
 
 img {
     width: 100%;
@@ -245,6 +266,13 @@ img {
     text-align: center;
 }
 
+.error {
+    color: #fa0000;
+    margin-top: 20px;
+    grid-column: 1/-1;
+    text-align: center;
+}
+
 .form-label {
     color: #373333;
     margin: 25px 45px 0 45px;
@@ -390,6 +418,7 @@ form {
     border-radius: 20px;
 }
 
+
 .inp_box {
     width: 350px;
     height: 37px;
@@ -448,8 +477,19 @@ footer {
     color: white;
 }
 
-.logout {
+.logout,
+.welcome {
     cursor: pointer;
+}
+
+.welcome {
+    color: #262626;
+    background-color: white;
+}
+
+.welcome:hover {
+    color: white;
+    background-color: #262626;
 }
 
 .hover-pointer {
@@ -465,4 +505,23 @@ footer {
     background-color: #262626;
     color: white;
     text-decoration: none;
+}
+
+.sign-up {
+    margin: 20px 45px;
+    width: 115px;
+
+}
+
+.sign-up,
+.sign-in {
+    padding: 4px 10px;
+
+}
+
+.sign-up:hover,
+.sign-in:hover {
+    color: white;
+    background-color: rgb(22, 22, 94);
+
 }

@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { User, UsersDataService } from '../users-data.service';
+import { UsersDataService } from '../users-data.service';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { User } from '../user';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -15,8 +17,12 @@ export class LoginComponent implements OnInit {
   token!: string;
   loginForm!: FormGroup;
   user!: User
+
+  unauthorizedMessage: string = '';
+  isUnauthorized: boolean = false;
+
   constructor(private _formBuilder: FormBuilder, private _usersService: UsersDataService, private _authService: AuthService, private _router: Router) {
-    this.user = new User("", "", "", "");
+    this.user = new User();
     this.redirectToHomePageIfLogged();
   }
 
@@ -27,19 +33,30 @@ export class LoginComponent implements OnInit {
     });
   }
   login() {
-    this.user = new User(
-      "",
-      "",
-      this.loginForm.value.username,
-      this.loginForm.value.password
-    );
+    this.user.fill(this.loginForm);
     this.getToken(this.user);
   }
   getToken(user: User) {
-    this._usersService.getToken(user).subscribe(token => {
-      this._authService.setToken(token);
-      this.redirectToHomePageIfLogged();
-    })
+    this._usersService.getToken(user).subscribe(
+      {
+        next: (token) => {
+          this.unauthorizedMessage = '';
+          this.isUnauthorized = false;
+          this._authService.setToken(token);
+        },
+        error: (error) => {
+          this.unauthorizedMessage = 'Unauthorized!';
+          this.isUnauthorized = true;
+        },
+        complete: () => {
+          if (!this.isUnauthorized) {
+            this.unauthorizedMessage = '';
+            this.isUnauthorized = false;
+            this.redirectToHomePageIfLogged();
+          }
+        }
+      }
+    )
   }
   redirectToHomePageIfLogged() {
     if (this._authService.isLoggedIn()) {

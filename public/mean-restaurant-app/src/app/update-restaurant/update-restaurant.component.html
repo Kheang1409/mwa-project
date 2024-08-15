@@ -1,0 +1,19 @@
+<div id="order">
+    <h1 class="heading">Update Restaurant
+    </h1>
+    <form (ngSubmit)="update()" #restaurantForm="ngForm" class="update-form">
+        <input type="text" name="name" class="inp_box" placeholder="Name" [(ngModel)]="restaurant.name">
+        <input type="text" name="publishedYear" class="inp_box" placeholder="Published Year"
+            [(ngModel)]="restaurant.publishedYear">
+        <textarea type="text" name="about" class="inp_box text_area" placeholder="About"
+            [(ngModel)]="restaurant.about"></textarea>
+        <input type="text" name="logo" class="inp_box" placeholder="Logo URL" [(ngModel)]="restaurant.logo">
+        <h4 class="form-label">Location:</h4>
+        <input type="text" name="city" class="inp_box" placeholder="City" [(ngModel)]="restaurant.location.city">
+        <input type="text" name="state" class="inp_box" placeholder="State" [(ngModel)]="restaurant.location.state">
+        <input type="text" name="country" class="inp_box" placeholder="Country"
+            [(ngModel)]="restaurant.location.country">
+        <h4 class="error" *ngIf="isUpdateFail">{{updateFailMessage}}</h4>
+        <button class="btn2" type="submit">Submit</button>
+    </form>
+</div>

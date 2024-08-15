@@ -7,7 +7,6 @@ const userModel = mongoose.model(process.env.USER_MODEL);
 
 
 const _sendResponse = function (res, response) {
-    console.log('send response');
     res.status(Number(response.status)).json(response.data)
 }
 
@@ -37,21 +36,20 @@ const _setDefaultResponse = function (statusCode, data) {
     }
 }
 
-const _ifPasswordMatch = function (user, password) {
+const _ifPasswordMatch = function (isMatch) {
     const error = {
         status: process.env.INVALID_AUTHERIZED_CODE,
         message: process.env.INVALID_AUTHERIZED_MESSAGE
     }
     return new Promise((resovle, reject) => {
-        if (bcrypt.compare(password, user.password))
-            resovle(user)
+        if (isMatch)
+            resovle()
         else
             reject(error)
     })
 }
 
 const _setErrorResponse = function (response, status, error) {
-    console.log('set error response');
     response.status = status;
     response.data = { message: error };
 }
@@ -59,7 +57,7 @@ const _setErrorResponse = function (response, status, error) {
 const _createToken = function (user) {
     return new Promise((resovle, reject) => {
         try {
-            const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET); //, { expiresIn: '1h' }
             resovle(token)
         }
         catch (error) {
@@ -73,13 +71,15 @@ const _jwtVerifyWithPromisify = promisify(jwt.verify);
 
 
 const login = function (req, res) {
+    console.log(req.body);
     let username = req.body.username;
     let password = req.body.password;
     let response = _setDefaultResponse(process.env.POST_CODE, {});
-    // const token = jtw.sign({}, process.env.JWT_SECRET);
     userModelFindByUsernameWith(username)
         .then(user => _ifFoundAUser(user))
-        .then(user => _ifPasswordMatch(user, password))
+        .then(user => bcrypt.compare(password, user.password))
+        .then(isMatch => _ifPasswordMatch(isMatch))
+        .then(() => userModelFindByUsernameWith(username))
         .then(user => _createToken(user))
         .then(token => response.data = { token: token })
         .catch(error => { _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, error.message) })
@@ -87,7 +87,6 @@ const login = function (req, res) {
 }
 
 const isTokenProvided = function (token) {
-    console.log('check if token provide', token);
     const error = {
         status: process.env.NOT_PROVIDE_TOKEN_CODE,
         message: process.env.NOT_PROVIDE_TOKEN_MESSAGE
@@ -110,7 +109,7 @@ const isValidToken = function (req, res, next) {
     isTokenProvided(token)
         .then(token => _jwtVerifyWithPromisify(token, process.env.JWT_SECRET))
         .then(data => next())
-        .catch(error => { console.log(error); isTokenValid = false; _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, error.message) })
+        .catch(error => { isTokenValid = false; _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, error.message) })
         .finally(() => { if (!isTokenValid) _sendResponse(res, response) })
 }
 

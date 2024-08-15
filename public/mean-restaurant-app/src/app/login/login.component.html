@@ -3,6 +3,8 @@
     <form [formGroup]="loginForm" (ngSubmit)="login()">
         <input type="text" class="inp_box" placeholder="Username" formControlName="username">
         <input type="password" class="inp_box" placeholder="Passowrd" formControlName="password">
+        <h4 class="error" *ngIf="isUnauthorized">{{unauthorizedMessage}}</h4>
         <button class="btn2">Login</button>
+        <a href="/sign-up" class="sign-up">Sign Up</a>
     </form>
 </div>

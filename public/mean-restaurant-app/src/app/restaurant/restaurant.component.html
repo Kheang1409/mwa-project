@@ -17,6 +17,11 @@
             <p>{{restaurant.about}}</p>
             <p>Published in: {{restaurant.publishedYear}}</p>
             <p>Location: {{restaurant.location.city}}, {{restaurant.location.country}}</p>
+
+            <span *ngIf="isLoggedIn()">
+                <button class="btn" (click)="update()">Update</button>
+                <button class="btn-danger" (click)="delete()">Delete</button>
+            </span>
         </div>
         <div class="about_column">
             <img src="{{restaurant.logo}}" alt="">

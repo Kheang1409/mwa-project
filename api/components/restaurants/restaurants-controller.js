@@ -50,7 +50,6 @@ const _sendReponse = function (res, response) {
 }
 
 const isTokenProvided = function (token) {
-    console.log('check if token provide', token);
     const error = {
         status: process.env.NOT_PROVIDE_TOKEN_CODE,
         message: process.env.NOT_PROVIDE_TOKEN_MESSAGE
@@ -177,9 +176,6 @@ const getAllRestaurant = function (req, res) {
             }
         };
     }
-    if (req.query && req.query.userId) {
-        query = { created_by: req.query.userId };
-    }
 
     if (req.query && req.query.offset) {
         if (isNaN(req.query.offset) == true) {
@@ -241,7 +237,7 @@ const getRestaurantById = function (req, res) {
         .finally(() => _sendReponse(res, response));
 }
 
-const restaurantObject = function (req, user) {
+const restaurantObject = function (req) {
     let newRestaurant = {
         name: req.body.name,
         publishedYear: req.body.publishedYear,
@@ -249,7 +245,6 @@ const restaurantObject = function (req, user) {
         dishes: req.body.dishes,
         logo: req.body.logo,
         about: req.body.about,
-        created_by: user.id
     }
     return new Promise(resovle => {
         resovle(newRestaurant)
@@ -259,11 +254,8 @@ const restaurantObject = function (req, user) {
 
 
 const createRestaurant = function (req, res) {
-    console.log('created called');
-    const token = req.headers['authorization'];
     let response = _setDefaultResponse(process.env.POST_CODE, {})
-    _jwtVerifyWithPromisify(token, process.env.JWT_SECRET)
-        .then(user => restaurantObject(req, user))
+    restaurantObject(req)
         .then(newRestaurant => restaurantModelCreate(newRestaurant))
         .then(createdRestaurant => response.data = createdRestaurant)
         .catch(error => _setErrorResponse(response, process.env.BAD_REQUEST_CODE, { message: error.message }))

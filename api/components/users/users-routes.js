@@ -10,6 +10,4 @@ router.route(process.env.URL_EMPTY)
 router.route(process.env.URL_USERS_LOGIN)
     .post(auth_controller.login)
 
-router.route("checkToken")
-
 module.exports = router;

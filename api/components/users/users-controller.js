@@ -30,20 +30,19 @@ const userModelFindByFieldWith = function (searchCriteriaObject) {
 }
 
 const _createHashBcrypt = function (password, saltSeed) {
-    console.log('hash created')
     return new Promise((resolve, rejects) => {
         resolve(bcrypt.hash(password, saltSeed));
     })
 }
 
 const _createUserObject = function (req, password) {
-    console.log('create user object');
     return new Promise((resolve, rejects) => {
         const newUser = {
             name: req.body.name,
             username: req.body.username,
             password: password
         }
+        console.log(newUser);
         resolve(newUser);
     })
 }
@@ -60,7 +59,6 @@ const _sendResponse = function (res, response) {
 }
 
 const _setErrorResponse = function (response, status, error) {
-    console.log('set error response');
     response.status = status;
     response.data = { message: error };
 }
@@ -103,12 +101,12 @@ const getUsers = function (req, res) {
 }
 
 const _ifUsernameTaken = function (username) {
-    console.log('check username if exist');
     const error = {
         status: process.env.USER_EXISTED,
         message: process.env.ALREADY_EXISTED_MESSAGE
     }
     return new Promise((resovle, reject) => {
+        console.log(username)
         if (username != null) {
             reject(error)
         } else {
@@ -119,7 +117,7 @@ const _ifUsernameTaken = function (username) {
 
 const createUser = function (req, res) {
     let response = _setDefaultResponse(process.env.POST_CODE, {})
-    if (req.body.username == null || req.body.password == null) {
+    if ((req.body.username == null && req.body.username == '') || (req.body.password == null && req.body.username == '')) {
         _setErrorResponse(response, process.env.BAD_REQUEST_CODE, process.env.BAD_REQUEST_MESSAGE)
     }
     if (response.status != process.env.POST_CODE) {
@@ -132,7 +130,7 @@ const createUser = function (req, res) {
         .then(hashedPassword => _createUserObject(req, hashedPassword))
         .then(createdUserObject => userModelCreate(createdUserObject))
         .then(createdUser => response.data = createdUser)
-        .catch(error => { _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG, error.message) })
+        .catch(error => { _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, error.message) })
         .finally(() => _sendResponse(res, response));
 
 }

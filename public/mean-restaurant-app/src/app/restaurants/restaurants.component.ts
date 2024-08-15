@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Restaurant, RestaurantsDataService } from '../restaurants-data.service';
+import { RestaurantsDataService } from '../restaurants-data.service';
+import { Restaurant } from '../restaurant';
 
 @Component({
   selector: 'app-restaurants',

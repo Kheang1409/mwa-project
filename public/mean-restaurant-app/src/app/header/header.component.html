@@ -3,9 +3,11 @@
     <ul>
         <li><a routerLink="/home">Home</a></li>
         <li><a routerLink="/restaurants">Restaurants</a></li>
-        <li><a routerLink="/create-restaurant">Create Restaurant</a></li>
-        <li *ngIf="!isLoggedIn()"><a routerLink="/login">Login</a></li>
+        <li *ngIf="isLoggedIn()"><a routerLink="/create-restaurant">Create Restaurant</a></li>
+        <li *ngIf="!isLoggedIn()"><a routerLink="/sign-up">Register</a></li>
+        <li *ngIf="!isLoggedIn()"><a routerLink="/sign-in">Login</a></li>
         <li *ngIf="isLoggedIn()"><a class="logout" (click)="logout()">Logout</a></li>
+        <li *ngIf="isLoggedIn()"><a class="welcome">Welcome {{ username }}</a></li>
     </ul>
 </nav>
 <div id="mobile">
@@ -13,8 +15,9 @@
     <ul>
         <li><a routerLink="/home">Home</a></li>
         <li><a routerLink="/restaurants">Restaurants</a></li>
-        <li><a routerLink="/create-restaurant">Create Restaurant</a></li>
-        <li *ngIf="!isLoggedIn()"><a routerLink="/login">Login</a></li>
+        <li *ngIf="isLoggedIn()"><a routerLink="/create-restaurant">Create Restaurant</a></li>
+        <li *ngIf="!isLoggedIn()"><a routerLink="/sign-up">Register</a></li>
+        <li *ngIf="!isLoggedIn()"><a routerLink="/sign-in">Login</a></li>
         <li *ngIf="isLoggedIn()"><a class="logout" (click)="logout()">Logout</a></li>
     </ul>
 </div>

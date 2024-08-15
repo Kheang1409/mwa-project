@@ -56,9 +56,6 @@ const restaurantSchema = mongoose.Schema({
     },
     about: {
         type: String
-    },
-    created_by: {
-        type: String
     }
 })
 

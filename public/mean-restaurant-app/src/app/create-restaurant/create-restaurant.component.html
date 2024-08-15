@@ -11,7 +11,7 @@
         <input type="text" name="city" class="inp_box" placeholder="City" ngModel>
         <input type="text" name="state" class="inp_box" placeholder="State" ngModel>
         <input type="text" name="country" class="inp_box" placeholder="Country" ngModel>
-
+        <h4 class="error" *ngIf="isCreateFail">{{createFailMessage}}</h4>
         <button class="btn2" type="submit">Submit</button>
     </form>
 </div>

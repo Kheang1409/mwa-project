@@ -133,22 +133,21 @@ const _updateDish = function (req, res, callback, STATUS_CODE) {
 }
 
 const getAllDishes = function (req, res) {
-
+    let count = process.env.COUNT;
     let offset = process.env.OFFSET;
     let limit = process.env.LIMIT;
-    let max = process.env.MAX_DISPLAY;
     let restaurantId = req.params.restaurantId;
     let response = _setDefaultResponse(process.env.GET_CODE, {});
 
     if (!mongoose.isValidObjectId(restaurantId)) {
         _setErrorResponse(response, process.env.BAD_REQUEST_CODE, process.env.INVALID_TYPE_MESSAGE)
     }
-    if (req.query.limit) {
-        if (isNaN(req.query.limit))
+    if (req.query.count) {
+        if (isNaN(req.query.count))
             _setErrorResponse(response, process.env.BAD_REQUEST_CODE, { message: process.env.OFFSET_COUNT_MUST_BE_NUMBER_MESSAGE })
         else
-            limit = parseInt(req.query.limit);
-        if (limit > max)
+            count = parseInt(req.query.count);
+        if (count > limit)
             _setErrorResponse(response, process.env.BAD_REQUEST_CODE, { message: process.env.OVER_LIMIT_MESSAGE })
 
     }
@@ -175,13 +174,12 @@ const fineDishById = function (req, res) {
     let restaurantId = req.params.restaurantId;
     let dishId = req.params.dishId;
     let response = _setDefaultResponse(process.env.GET_CODE, {});
-
+    console.log(dishId, restaurantId);
     if (!mongoose.isValidObjectId(restaurantId) || !mongoose.isValidObjectId(dishId)) {
         response.status = process.env.BAD_REQUEST_CODE;
         response.data = { message: process.env.INVALID_TYPE_MESSAGE };
         _sendReponse(res, response)
     }
-
     _restaurantModelFindByIdExec(restaurantId)
         .then(returnRestaurant => _getIfFoundRestaurant(returnRestaurant))
         .then(restaurant => _getIfFoundDish(restaurant.dishes.id(dishId)))

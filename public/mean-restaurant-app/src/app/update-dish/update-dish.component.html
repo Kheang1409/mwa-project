@@ -1,13 +1,13 @@
 <div id="order">
-    <h1 class="heading">Create Dish
+    <h1 class="heading">Update Dish
     </h1>
-    <form (ngSubmit)="create()" #dishForm="ngForm" class="create-form">
+    <form (ngSubmit)="update()" #dishForm="ngForm" class="update-form">
         <input type="text" name="title" class="inp_box" placeholder="Title" [(ngModel)]="dish.title">
         <input type="text" name="price" class="inp_box" placeholder="Price" [(ngModel)]="dish.price">
         <input type="text" name="picture" class="inp_box" placeholder="Picture URL" [(ngModel)]="dish.picture">
         <textarea type="text" name="description" class="inp_box text_area" placeholder="Description"
             [(ngModel)]="dish.description"></textarea>
-        <h4 class="error" *ngIf="isCreateFail">{{createFailMessage}}</h4>
+        <h4 class="error" *ngIf="isUpdateFail">{{updateFailMessage}}</h4>
         <button class="btn2" type="submit">Submit</button>
     </form>
 </div>

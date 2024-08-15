@@ -1,7 +1,7 @@
 <div id="menu-dish">
     <div class="heading">
         <h1>{{dishes.length | custom }}</h1>
-        <button class="btn2" (click)="addNewDish()">Add New Dish</button>
+        <button *ngIf="isLoggedIn()" class="btn2" (click)="addNewDish()">Add New Dish</button>
 
     </div>
     <div class="card" *ngFor="let dish of dishes">
@@ -14,6 +14,10 @@
             <p>
                 {{dish.description}}
             </p>
+            <span *ngIf="isLoggedIn()">
+                <button class="btn" (click)="update(dish._id)">Update</button>
+                <button class="btn-danger" (click)="delete(dish._id)">Delete</button>
+            </span>
         </div>
     </div>
 </div>

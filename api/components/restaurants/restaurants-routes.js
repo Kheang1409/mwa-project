@@ -18,9 +18,9 @@ router.route(process.env.URL_TOTAL)
 
 router.route(process.env.URL_RESTAURANTS_WITH_ID)
     .get(restaurantController.getRestaurantById)
-    .patch(restaurantController.updateRestaurantPartial)
-    .put(restaurantController.updateRestaurantFull)
-    .delete(restaurantController.deleteRestaurant)
+    .patch(auth_controller.isValidToken, restaurantController.updateRestaurantPartial)
+    .put(auth_controller.isValidToken, restaurantController.updateRestaurantFull)
+    .delete(auth_controller.isValidToken, restaurantController.deleteRestaurant)
 
 //nested api
 router.use(process.env.URL_RESTAURANTS_WITH_ID, dishesRouter);

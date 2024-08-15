@@ -1,34 +1,39 @@
 import { Injectable } from '@angular/core';
+import { Token } from './token';
 
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class AuthService {
 
-  private token: string | null = null;
-  private tokenKey = 'authToken';
+  #token!: Token | null;
 
-  constructor() {
-    this.token = localStorage.getItem(this.tokenKey);
+  get token() {
+    return this.#token;
+  }
+  set token(token: Token | null) {
+    this.#token = token;
   }
 
-  setToken(token: string) {
-    this.token = token;
-    localStorage.setItem(this.tokenKey, JSON.stringify(token));
+  private tokenKey = 'authToken';
+
+  setToken(token: Token) {
+    this.#token = token;
+    localStorage.setItem(this.tokenKey, token.token);
   }
 
   getToken(): string | null {
-    this.token = localStorage.getItem(this.tokenKey);
-    return JSON.parse(this.token + '')?.token;
+    return localStorage.getItem(this.tokenKey);
   }
 
   clearToken() {
-    this.token = null;
     localStorage.removeItem(this.tokenKey);
   }
 
   isLoggedIn(): boolean {
-    return this.token !== null;
+    return localStorage.getItem(this.tokenKey) !== null;
   }
 
   logout() {
