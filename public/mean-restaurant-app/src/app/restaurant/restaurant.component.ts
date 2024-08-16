@@ -17,6 +17,10 @@ import { environment } from '../../environments/environment.development';
 export class RestaurantComponent implements OnInit {
   restaurantId!: string;
   restaurant!: Restaurant;
+
+  isError: boolean = false;
+  errorMessage: string = ''
+
   constructor(private _restaurantsService: RestaurantsDataService, private _authService: AuthService, private _activedRoute: ActivatedRoute, private _router: Router) {
     this.restaurant = new Restaurant();
     this.restaurant.location = new Location();
@@ -34,8 +38,20 @@ export class RestaurantComponent implements OnInit {
   }
   delete() {
 
-    this._restaurantsService.deleteRestaurant(this.restaurantId).subscribe(restaurant => {
-      this._router.navigate([environment.urlFrontend.restaurants]);
+    this._restaurantsService.deleteRestaurant(this.restaurantId).subscribe({
+      next: (restaurants) => {
+        this.restaurant = restaurants;
+        this.isError = false;
+      },
+      error: (error) => {
+        this.isError = true;
+        this.errorMessage = error.message;
+      },
+      complete: () => {
+        if (!this.isError) {
+          this._router.navigate([environment.urlFrontend.restaurants]);
+        }
+      }
     })
   }
   update() {

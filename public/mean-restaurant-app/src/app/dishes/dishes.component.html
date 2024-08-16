@@ -4,7 +4,7 @@
         <button *ngIf="isLoggedIn()" class="btn2" (click)="addNewDish()">Add New Dish</button>
 
     </div>
-    <div class="card" *ngFor="let dish of dishes">
+    <div class="card" *ngFor="let dish of dishes; let i = index">
         <img src="{{dish.picture}}">
         <div class="details">
             <div class="details-sub">
@@ -14,9 +14,10 @@
             <p>
                 {{dish.description}}
             </p>
+            <h5 class='error' *ngIf="isError[i]">{{errorMessage}}</h5>
             <span *ngIf="isLoggedIn()">
                 <button class="btn" (click)="update(dish._id)">Update</button>
-                <button class="btn-danger" (click)="delete(dish._id)">Delete</button>
+                <button class="btn-danger" (click)="delete(i, dish._id)">Delete</button>
             </span>
         </div>
     </div>

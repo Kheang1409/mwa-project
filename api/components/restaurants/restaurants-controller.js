@@ -37,7 +37,7 @@ const _setDefaultResponse = function (statusCode, data) {
 
 const _setErrorResponse = function (response, statusCode, message) {
     response.status = statusCode;
-    response.data = message;
+    response.data = { message: message };
 }
 
 const _sendReponse = function (res, response) {
@@ -100,6 +100,7 @@ const _partialUpdate = function (req, restaurant) {
 }
 
 const _updateRestaurant = function (req, res, callBack, STATUS_CODE) {
+
     let restaurantId = req.params.restaurantId;
     let response = _setDefaultResponse(STATUS_CODE, {})
     if (!mongoose.isValidObjectId(restaurantId)) {
@@ -108,14 +109,16 @@ const _updateRestaurant = function (req, res, callBack, STATUS_CODE) {
     if (response.status != STATUS_CODE) {
         _sendReponse(res, response)
     }
+    else {
+        restaurantModelFindByIdExec(restaurantId)
+            .then(restaurant => _IfFoundARestaurant(restaurant))
+            .then(restaurant => callBack(req, restaurant))
+            .then(restaurant => restaurantSave(restaurant))
+            .then(restaurant => response.data = restaurant)
+            .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, error.message))
+            .finally(() => _sendReponse(res, response));
+    }
 
-    restaurantModelFindByIdExec(restaurantId)
-        .then(restaurant => _IfFoundARestaurant(restaurant))
-        .then(restaurant => callBack(req, restaurant))
-        .then(restaurant => restaurantSave(restaurant))
-        .then(restaurant => response.data = restaurant)
-        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
-        .finally(() => _sendReponse(res, response));
 }
 
 const _setGeoSearch = function (let, len) {
@@ -185,7 +188,7 @@ const getAllRestaurant = function (req, res) {
     restaurantModelFindSkipLimitExec(query, offset, count)
         .then(restaurants => _IfFoundAnyRestaurants(restaurants))
         .then(restaurants => response.data = restaurants)
-        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
+        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, error.message))
         .finally(() => _sendReponse(res, response));
 }
 
@@ -202,7 +205,7 @@ const getRestaurantById = function (req, res) {
     restaurantModelFindByIdExec(restaurantId)
         .then(restaurant => _IfFoundARestaurant(restaurant))
         .then(restaurant => response.data = restaurant)
-        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
+        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, error.message))
         .finally(() => _sendReponse(res, response));
 }
 
@@ -227,7 +230,7 @@ const createRestaurant = function (req, res) {
     restaurantObject(req)
         .then(newRestaurant => restaurantModelCreate(newRestaurant))
         .then(createdRestaurant => response.data = createdRestaurant)
-        .catch(error => _setErrorResponse(response, process.env.BAD_REQUEST_CODE, { message: error.message }))
+        .catch(error => _setErrorResponse(response, process.env.BAD_REQUEST_CODE, error.message))
         .finally(() => _sendReponse(res, response));
 }
 
@@ -249,11 +252,14 @@ const deleteRestaurant = function (req, res) {
     if (response.status != process.env.DELETE_CODE) {
         _sendReponse(res, response)
     }
-    restaurantModelFindByIdAndDeleteExec(restaurantId)
-        .then(deletedRestaurant => _IfFoundARestaurant(deletedRestaurant))
-        .then(deletedRestaurant => response.data = deletedRestaurant)
-        .catch(error => _setErrorResponse(response, process.env.SOMETHING_WRONG_CODE, { message: error.message }))
-        .finally(() => _sendReponse(res, response));
+    else {
+        restaurantModelFindByIdAndDeleteExec(restaurantId)
+            .then(deletedRestaurant => _IfFoundARestaurant(deletedRestaurant))
+            .then(deletedRestaurant => response.data = deletedRestaurant)
+            .catch(error => _setErrorResponse(response, process.env.SOMETHING_WRONG_CODE, error.message))
+            .finally(() => _sendReponse(res, response));
+    }
+
 }
 
 const getTotalRestaurants = function (req, res) {
@@ -264,7 +270,7 @@ const getTotalRestaurants = function (req, res) {
     }
     restaurantModelFindAndCountExec(query)
         .then(totalRestaurants => response.data = totalRestaurants)
-        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
+        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, error.message))
         .finally(() => _sendReponse(res, response));
 }
 

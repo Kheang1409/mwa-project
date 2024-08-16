@@ -122,14 +122,15 @@ const _updateDish = function (req, res, callback, STATUS_CODE) {
         response.data = { message: process.env.INVALID_TYPE_MESSAGE };
         _sendReponse(res, response)
     }
-
-    _restaurantModelFindByIdExec(restaurantId)
-        .then(returnRestaurant => _getIfFoundRestaurant(returnRestaurant))
-        .then(restaurant => callback(restaurant, restaurant.dishes.id(dishId), req))
-        .then((restaurant) => _restaurantSave(restaurant))
-        .then((restaurant) => response.data = restaurant)
-        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
-        .finally(() => { _sendReponse(res, response) });
+    else {
+        _restaurantModelFindByIdExec(restaurantId)
+            .then(returnRestaurant => _getIfFoundRestaurant(returnRestaurant))
+            .then(restaurant => callback(restaurant, restaurant.dishes.id(dishId), req))
+            .then((restaurant) => _restaurantSave(restaurant))
+            .then((restaurant) => response.data = restaurant)
+            .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
+            .finally(() => { _sendReponse(res, response) });
+    }
 }
 
 const getAllDishes = function (req, res) {
@@ -179,13 +180,14 @@ const fineDishById = function (req, res) {
         response.data = { message: process.env.INVALID_TYPE_MESSAGE };
         _sendReponse(res, response)
     }
-    _restaurantModelFindByIdExec(restaurantId)
-        .then(returnRestaurant => _getIfFoundRestaurant(returnRestaurant))
-        .then(restaurant => _getIfFoundDish(restaurant.dishes.id(dishId)))
-        .then(dish => response.data = dish)
-        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
-        .finally(() => _sendReponse(res, response));
-
+    else {
+        _restaurantModelFindByIdExec(restaurantId)
+            .then(returnRestaurant => _getIfFoundRestaurant(returnRestaurant))
+            .then(restaurant => _getIfFoundDish(restaurant.dishes.id(dishId)))
+            .then(dish => response.data = dish)
+            .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
+            .finally(() => _sendReponse(res, response));
+    }
 }
 
 const createDish = function (req, res) {
@@ -198,14 +200,15 @@ const createDish = function (req, res) {
         response.data = { message: process.env.INVALID_TYPE_MESSAGE };
         _sendReponse(res, response)
     }
-
-    _restaurantModelFindByIdExec(restaurantId)
-        .then(returnRestaurant => _getIfFoundRestaurant(returnRestaurant))
-        .then(restaurant => _addDishToSubResturant(restaurant, newDishObject))
-        .then((restaurant) => _restaurantSave(restaurant))
-        .then((restaurant) => response.data = restaurant)
-        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
-        .finally(() => { _sendReponse(res, response) });
+    else {
+        _restaurantModelFindByIdExec(restaurantId)
+            .then(returnRestaurant => _getIfFoundRestaurant(returnRestaurant))
+            .then(restaurant => _addDishToSubResturant(restaurant, newDishObject))
+            .then((restaurant) => _restaurantSave(restaurant))
+            .then((restaurant) => response.data = restaurant)
+            .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
+            .finally(() => { _sendReponse(res, response) });
+    }
 }
 
 const deleteDish = function (req, res) {
@@ -218,13 +221,16 @@ const deleteDish = function (req, res) {
         response.data = { message: process.env.INVALID_TYPE_MESSAGE };
         _sendReponse(res, response)
     }
-    _restaurantModelFindByIdExec(restaurantId)
-        .then(returnRestaurant => _getIfFoundRestaurant(returnRestaurant))
-        .then(restaurant => _deleteDishToSubResturant(restaurant, dishId))
-        .then((restaurant) => _restaurantSave(restaurant))
-        .then((restaurant) => response.data = restaurant)
-        .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
-        .finally(() => { _sendReponse(res, response) });
+    else {
+        _restaurantModelFindByIdExec(restaurantId)
+            .then(returnRestaurant => _getIfFoundRestaurant(returnRestaurant))
+            .then(restaurant => _deleteDishToSubResturant(restaurant, dishId))
+            .then((restaurant) => _restaurantSave(restaurant))
+            .then((restaurant) => response.data = restaurant)
+            .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
+            .finally(() => { _sendReponse(res, response) });
+    }
+
 }
 
 const updateDishPartial = function (req, res) {

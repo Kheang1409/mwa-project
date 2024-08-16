@@ -46,8 +46,8 @@ export class UpdateRestaurantComponent implements OnInit {
           this.isUpdateFail = false;
         },
         error: (error) => {
-          this.updateFailMessage = environment.message.updateFailMessage;
           this.isUpdateFail = true;
+          this.updateFailMessage = error.message;
         },
         complete: () => {
           if (!this.isUpdateFail) {

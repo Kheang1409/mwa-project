@@ -25,6 +25,9 @@ export class RestaurantsComponent implements OnInit {
 
   searchQuery: string = '';
 
+  isError: boolean = false;
+  errorMessage: string = ''
+
   constructor(private _restaurantsService: RestaurantsDataService) {
     this.page = sessionStorage.getItem(this.pageNumberKey) == null ? environment.numbers.page : Number(sessionStorage.getItem(this.pageNumberKey))
   }
@@ -73,8 +76,11 @@ export class RestaurantsComponent implements OnInit {
     this._restaurantsService.getRestaurants(pageNumber, name).subscribe({
       next: (restaurants) => {
         this.restaurants = restaurants;
+        this.isError = false;
       },
       error: (error) => {
+        this.isError = true;
+        this.errorMessage = error.message;
         this.restaurants = [];
       },
       complete: () => {

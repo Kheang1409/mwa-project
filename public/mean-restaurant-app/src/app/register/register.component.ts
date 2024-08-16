@@ -47,7 +47,7 @@ export class RegisterComponent implements OnInit {
             this.isCreateFail = false;
           },
           error: (error) => {
-            this.createFailMessage = environment.message.createFailMessage;
+            this.createFailMessage = error.message;
             this.isCreateFail = true;
           },
           complete: () => {
@@ -66,7 +66,8 @@ export class RegisterComponent implements OnInit {
           this._authService.setToken(token);
         },
         error: (error) => {
-
+          this.createFailMessage = error.message;
+          this.isCreateFail = true;
         },
         complete: () => {
           this.redirectToHomePageIfLogged();

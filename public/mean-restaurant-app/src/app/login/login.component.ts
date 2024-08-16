@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
           this._authService.setToken(token);
         },
         error: (error) => {
-          this.unauthorizedMessage = environment.message.unauthorizedMessage;
+          this.unauthorizedMessage = error.message;
           this.isUnauthorized = true;
         },
         complete: () => {

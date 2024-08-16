@@ -42,7 +42,7 @@ export class CreateDishComponent implements OnInit {
           this.isCreateFail = false;
         },
         error: (error) => {
-          this.createFailMessage = environment.message.createFailMessage;
+          this.createFailMessage = error.message;
           this.isCreateFail = true;
         },
         complete: () => {

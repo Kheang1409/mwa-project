@@ -54,7 +54,8 @@ export class CreateRestaurantComponent implements OnInit {
           this.restaurant = restaurant;
         },
         error: (error) => {
-          this.createFailMessage = environment.message.createFailMessage;
+          console.log(error);
+          this.createFailMessage = error.message;
           this.isCreateFail = true;
         },
         complete: () => {

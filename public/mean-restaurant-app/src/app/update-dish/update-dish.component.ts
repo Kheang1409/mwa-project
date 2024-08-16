@@ -46,7 +46,7 @@ export class UpdateDishComponent {
           this.isUpdateFail = false;
         },
         error: (error) => {
-          this.updateFailMessage = environment.message.updateFailMessage;
+          this.updateFailMessage = error.message;
           this.isUpdateFail = true;
         },
         complete: () => {

@@ -16,6 +16,8 @@ import { RestaurantsDataService } from '../restaurants-data.service';
 export class DishesComponent implements OnInit {
   @Input() dishes!: Dish[];
   restaurantId!: string;
+  isError: boolean[] = new Array<boolean>()
+  errorMessage: string = ''
 
   constructor(private _activatedRouter: ActivatedRoute, private _router: Router, private _authService: AuthService, private _restaurantService: RestaurantsDataService) { }
   ngOnInit(): void {
@@ -30,10 +32,17 @@ export class DishesComponent implements OnInit {
   isLoggedIn(): boolean {
     return this._authService.isLoggedIn();
   }
-  delete(dishId: string) {
-    this._restaurantService.deleteDish(this.restaurantId, dishId).subscribe(restaurant => {
-      this.dishes = restaurant.dishes
-    })
+  delete(index: number, dishId: string) {
+    this._restaurantService.deleteDish(this.restaurantId, dishId).subscribe({
+      next: (restaurant) => {
+        this.isError[index] = false;
+        this.dishes = restaurant.dishes
+      },
+      error: (error) => {
+        this.isError[index] = true;
+        this.errorMessage = error.message;
+      }
+    });
   }
   update(dishId: string) {
     const url = '/restaurant/' + this.restaurantId + '/edit-dish/' + dishId;
