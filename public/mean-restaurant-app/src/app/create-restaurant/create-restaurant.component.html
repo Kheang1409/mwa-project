@@ -4,7 +4,7 @@
 
     <form (ngSubmit)="create(restaurantForm)" #restaurantForm="ngForm" class="create-form">
         <input type="text" name="name" class="inp_box" placeholder="Name" ngModel>
-        <input type="text" name="publishedYear" class="inp_box" placeholder="published Year" ngModel>
+        <input type="number" name="publishedYear" class="inp_box" placeholder="published Year" ngModel>
         <textarea type="text" name="about" class="inp_box text_area" placeholder="About Restaurant" ngModel></textarea>
         <input type="text" name="logo" class="inp_box" placeholder="Logo" ngModel>
         <h4 class="form-label">Location:</h4>

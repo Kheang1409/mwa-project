@@ -14,7 +14,10 @@ const dishSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    description: String,
+    description: {
+        type: String,
+        required: true
+    },
 });
 
 const locationSchema = mongoose.Schema({
@@ -52,10 +55,13 @@ const restaurantSchema = mongoose.Schema({
         required: true
     },
     logo: {
-        type: String
+        type: String,
+        required: true
+
     },
     about: {
-        type: String
+        type: String,
+        required: true
     }
 })
 

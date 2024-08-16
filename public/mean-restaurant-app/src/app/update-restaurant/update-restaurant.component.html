@@ -3,7 +3,7 @@
     </h1>
     <form (ngSubmit)="update()" #restaurantForm="ngForm" class="update-form">
         <input type="text" name="name" class="inp_box" placeholder="Name" [(ngModel)]="restaurant.name">
-        <input type="text" name="publishedYear" class="inp_box" placeholder="Published Year"
+        <input type="number" name="publishedYear" class="inp_box" placeholder="Published Year"
             [(ngModel)]="restaurant.publishedYear">
         <textarea type="text" name="about" class="inp_box text_area" placeholder="About"
             [(ngModel)]="restaurant.about"></textarea>

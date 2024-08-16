@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from './user';
 import { Token } from './token';
+import { environment } from '../environments/environment.development';
 
 
 @Injectable({
@@ -10,7 +11,7 @@ import { Token } from './token';
 })
 export class UsersDataService {
 
-  private _baseUrl = "http://localhost:3000/api/users";
+  private _baseUrl = environment.urlApi.baseUserUrl;
 
   constructor(private _httpClient: HttpClient) { }
   getUsers(): Observable<User[]> {
@@ -18,7 +19,7 @@ export class UsersDataService {
     return this._httpClient.get<User[]>(url);
   }
   getToken(user: User): Observable<Token> {
-    const url: string = this._baseUrl + "/login";
+    const url: string = this._baseUrl + environment.urlShared.login;
     return this._httpClient.post<Token>(url, user.jsonify());
   }
   createUser(user: User): Observable<User> {

@@ -5,6 +5,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { RestaurantsDataService } from '../restaurants-data.service';
 import { Location, Restaurant } from '../restaurant';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-create-restaurant',
@@ -14,7 +15,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './create-restaurant.component.css'
 })
 export class CreateRestaurantComponent implements OnInit {
-  @ViewChild('restaurantForm')
+  @ViewChild(environment.forms.restaurantForm)
   restaurantForm!: NgForm;
   restaurant!: Restaurant;
   location!: Location;
@@ -24,7 +25,7 @@ export class CreateRestaurantComponent implements OnInit {
 
   constructor(private _authService: AuthService, private _restaurantsService: RestaurantsDataService, private _router: Router) {
     if (!this._authService.isLoggedIn()) {
-      this._router.navigate(['/sign-in']);
+      this._router.navigate([environment.urlFrontend.signIn]);
     }
   }
   ngOnInit(): void {
@@ -44,25 +45,27 @@ export class CreateRestaurantComponent implements OnInit {
   }
 
   create(form: NgForm): void {
-    this.restaurant = this.createRestaurantObject(form)
-    this._restaurantsService.addRestaurant(this.restaurant).subscribe({
-      next: (restaurant) => {
-        this.createFailMessage = '';
-        this.isCreateFail = false;
-        this.restaurant = restaurant;
-      },
-      error: (error) => {
-        this.createFailMessage = 'Create unsuccessfully!';
-        this.isCreateFail = true;
-      },
-      complete: () => {
-        if (!this.isCreateFail) {
+    if (!this.isBlanked()) {
+      this.restaurant = this.createRestaurantObject(form)
+      this._restaurantsService.addRestaurant(this.restaurant).subscribe({
+        next: (restaurant) => {
           this.createFailMessage = '';
           this.isCreateFail = false;
-          this._router.navigate([`/restaurant/${this.restaurant._id}`]);
+          this.restaurant = restaurant;
+        },
+        error: (error) => {
+          this.createFailMessage = environment.message.createFailMessage;
+          this.isCreateFail = true;
+        },
+        complete: () => {
+          if (!this.isCreateFail) {
+            this.createFailMessage = '';
+            this.isCreateFail = false;
+            this._router.navigate([`/${environment.urlFrontend.restaurant}/${this.restaurant._id}`]);
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   createLocationObject(form: NgForm) {
@@ -76,5 +79,14 @@ export class CreateRestaurantComponent implements OnInit {
     restaurant.fill(form);
     restaurant.location = this.createLocationObject(form);
     return restaurant;
+  }
+
+  isBlanked(): boolean {
+    if (this.restaurantForm.value.name === '' || this.restaurantForm.value.publishedYear === '' || this.restaurantForm.value.about === '' || this.restaurantForm.value.logo === '' || this.restaurantForm.value.city === '' || this.restaurantForm.value.state === '' || this.restaurantForm.value.country === '') {
+      this.createFailMessage = environment.message.filledInTheBlank;
+      this.isCreateFail = true;
+      return true;
+    }
+    return false;
   }
 }

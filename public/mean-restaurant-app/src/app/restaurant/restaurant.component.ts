@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DishesComponent } from '../dishes/dishes.component';
 import { Location, Restaurant } from '../restaurant';
 import { AuthService } from '../auth.service';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-restaurant',
@@ -22,7 +23,7 @@ export class RestaurantComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.restaurantId = this._activedRoute.snapshot.params["id"];
+    this.restaurantId = this._activedRoute.snapshot.params[environment.params.restaurantId];
     this._restaurantsService.getRestaurant(this.restaurantId).subscribe(restaurant => {
       this.restaurant = restaurant;
     })
@@ -34,11 +35,11 @@ export class RestaurantComponent implements OnInit {
   delete() {
 
     this._restaurantsService.deleteRestaurant(this.restaurantId).subscribe(restaurant => {
-      this._router.navigate(['/restaurants']);
+      this._router.navigate([environment.urlFrontend.restaurants]);
     })
   }
   update() {
-    this._router.navigate(['/edit-restaurant/' + this.restaurantId]);
+    this._router.navigate([`${environment.urlFrontend.editRestaurant}/${this.restaurantId}`]);
 
   }
 }

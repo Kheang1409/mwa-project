@@ -1,10 +1,11 @@
 import { FormGroup } from "@angular/forms";
+import { environment } from "../environments/environment.development";
 
 export class User {
-    #_id: string = '';
-    #name: string = '';
-    #username: string = '';
-    #password: string = '';
+    #_id: string = ''
+    #name: string = ''
+    #username: string = ''
+    #password: string = ''
 
     get _id(): string {
         return this.#_id;

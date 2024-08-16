@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RestaurantsDataService } from '../restaurants-data.service';
 import { Restaurant } from '../restaurant';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-restaurants',
@@ -15,14 +16,14 @@ export class RestaurantsComponent implements OnInit {
   previouseDisable: boolean = false;
   nextDisable: boolean = false;
 
-  private pageNumberKey = 'pageNumber';
+  private pageNumberKey = environment.keys.pageNumberKey;
 
-  page: number = 1;
+  page: number = environment.numbers.page;
   total_page!: number;
   restaurants: Restaurant[] = new Array<Restaurant>();
 
   constructor(private _restaurantsService: RestaurantsDataService) {
-    this.page = sessionStorage.getItem(this.pageNumberKey) == null ? 1 : Number(sessionStorage.getItem(this.pageNumberKey))
+    this.page = sessionStorage.getItem(this.pageNumberKey) == null ? environment.numbers.page : Number(sessionStorage.getItem(this.pageNumberKey))
   }
 
   previouse() {
@@ -51,7 +52,7 @@ export class RestaurantsComponent implements OnInit {
   ngOnInit(): void {
     this.getRestaurants(this.page)
     this._restaurantsService.getTotalRestaurants().subscribe(restaurants => {
-      this.total_page = Math.ceil(restaurants / 4);
+      this.total_page = Math.ceil(restaurants / environment.numbers.limit);
     });
   }
   getRestaurants(pageNumber: number): void {
@@ -61,6 +62,6 @@ export class RestaurantsComponent implements OnInit {
   }
   setPageNumber(page: number) {
     this.page = page;
-    sessionStorage.setItem(this.pageNumberKey, "" + page);
+    sessionStorage.setItem(this.pageNumberKey, `${page}`);
   }
 }

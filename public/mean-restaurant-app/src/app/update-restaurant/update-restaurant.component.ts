@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location, Restaurant } from '../restaurant';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-update-restaurant',
@@ -18,18 +19,18 @@ export class UpdateRestaurantComponent implements OnInit {
   restaurantId!: string;
   restaurant!: Restaurant;
 
-  updateFailMessage: string = '';
+  updateFailMessage: string = ''
   isUpdateFail: boolean = false;
 
   constructor(private _authService: AuthService, private _restaurantsService: RestaurantsDataService, private _router: Router, private _activatedRouter: ActivatedRoute) {
     this.restaurant = new Restaurant();
     this.restaurant.location = new Location();
     if (!this._authService.isLoggedIn()) {
-      this._router.navigate(['/sign-in']);
+      this._router.navigate([environment.urlFrontend.signIn]);
     }
   }
   ngOnInit(): void {
-    this.restaurantId = this._activatedRouter.snapshot.params['id'];
+    this.restaurantId = this._activatedRouter.snapshot.params[environment.params.restaurantId];
     this._restaurantsService.getRestaurant(this.restaurantId).subscribe(restaurant => {
       // this.restaurant = restaurant // it will lose jsonify
       this.restaurant = Object.assign(new Restaurant(), restaurant);
@@ -38,23 +39,34 @@ export class UpdateRestaurantComponent implements OnInit {
   }
 
   update(): void {
-    this._restaurantsService.updateRestaurant(this.restaurantId, this.restaurant).subscribe({
-      next: (restaurant) => {
-        this.updateFailMessage = '';
-        this.isUpdateFail = false;
-      },
-      error: (error) => {
-        this.updateFailMessage = 'Update unsuccessfully!';
-        this.isUpdateFail = true;
-      },
-      complete: () => {
-        if (!this.isUpdateFail) {
-          this.updateFailMessage = '';
+    if (!this.isBlank()) {
+      this._restaurantsService.updateRestaurant(this.restaurantId, this.restaurant).subscribe({
+        next: (restaurant) => {
+          this.updateFailMessage = ''
           this.isUpdateFail = false;
-          this._router.navigate([`/restaurant/${this.restaurant._id}`]);
+        },
+        error: (error) => {
+          this.updateFailMessage = environment.message.updateFailMessage;
+          this.isUpdateFail = true;
+        },
+        complete: () => {
+          if (!this.isUpdateFail) {
+            this.updateFailMessage = ''
+            this.isUpdateFail = false;
+            this._router.navigate([`${environment.urlFrontend.restaurant}/${this.restaurant._id}`]);
+          }
         }
-      }
-    });
+      });
+    }
+  }
+
+  isBlank(): boolean {
+    if (this.restaurant.name === '' || this.restaurant.publishedYear === 0 || this.restaurant.about === '' || this.restaurant.logo === '' || this.restaurant.location.city === '' || this.restaurant.location.state === '' || this.restaurant.location.country === '') {
+      this.updateFailMessage = environment.message.filledInTheBlank;
+      this.isUpdateFail = true;
+      return true;
+    }
+    return false;
   }
 
 }

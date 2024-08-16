@@ -72,7 +72,7 @@ const _IfFoundAnyRestaurants
             message: process.env.NOT_FOUND_MESSAGE
         }
         return new Promise((resolve, reject) => {
-            if (restaurants.length > 0)
+            if (restaurants.length > process.env.EMPTY)
                 resolve(restaurants);
             else
                 reject(error);
@@ -144,7 +144,7 @@ const _setGeoSearch = function (let, len) {
         'publisher.location.coordinates': {
             $near: {
                 $geometry: {
-                    type: "Point",
+                    type: process.env.GEOMETRY_TYPE,
                     coordinates: [let, len]
                 },
                 $maxDistance: process.env.MAX_DISTANCE, // Optional: specify if needed
@@ -163,18 +163,6 @@ const getAllRestaurant = function (req, res) {
     let query = {};
     if (req.query.lat && req.query.len) {
         query = _setGeoSearch(req.query.len, eq.query.lat)
-        let query = {
-            'publisher.location.coordinates': {
-                $near: {
-                    $geometry: {
-                        type: "Point",
-                        coordinates: [-71, 41]
-                    },
-                    $maxDistance: 100000, // Optional: specify if needed
-                    $minDistance: 10000 // Optional: specify if needed
-                }
-            }
-        };
     }
 
     if (req.query && req.query.offset) {

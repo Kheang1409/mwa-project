@@ -17,7 +17,7 @@ const _ifFoundAnyUsers = function (users) {
         message: process.env.NOT_FOUND_MESSAGE
     }
     return new Promise((resolve, reject) => {
-        if (users.length > 0)
+        if (users.length > process.env.EMPTY)
             resolve(users);
         else
             reject(error);
@@ -42,7 +42,6 @@ const _createUserObject = function (req, password) {
             username: req.body.username,
             password: password
         }
-        console.log(newUser);
         resolve(newUser);
     })
 }
@@ -106,7 +105,6 @@ const _ifUsernameTaken = function (username) {
         message: process.env.ALREADY_EXISTED_MESSAGE
     }
     return new Promise((resovle, reject) => {
-        console.log(username)
         if (username != null) {
             reject(error)
         } else {

@@ -5,9 +5,9 @@
         <input type="text" name="name" class="inp_box" placeholder="Name" formControlName="name">>
         <input type="text" name="username" class="inp_box" placeholder="Username" formControlName="username">
         <input type="password" name="password" class="inp_box" placeholder="Password" formControlName="password">
-        <input type="password" name="comfirm_password" class="inp_box" placeholder="Comfirm Password"
-            formControlName="comfirm_password">
-        <h4 class="error" *ngIf="isCreatedFail">{{createdFailMessage}}</h4>
+        <input type="password" name="comfirmPassword" class="inp_box" placeholder="Comfirm Password"
+            formControlName="comfirmPassword">
+        <h4 class="error" *ngIf="isCreateFail">{{createFailMessage}}</h4>
         <button class="btn2" type="submit">Sign Up</button>
         <a href="/sign-in" class="sign-in">Already have an account?</a>
     </form>

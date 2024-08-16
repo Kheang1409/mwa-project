@@ -4,6 +4,7 @@ import { LoginComponent } from '../login/login.component';
 import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-header',
@@ -13,14 +14,17 @@ import { jwtDecode } from 'jwt-decode';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
-  title: string = 'Restos'
-  username: string = 'KHEANG';
+  title: string = environment.application.name;
+  username: string = ''
+
+  home: string = environment.urlFrontend.home;
+
   constructor(private _authService: AuthService, private _router: Router) {
   }
 
   ngOnInit(): void {
     if (this._authService.getToken()) {
-      const token = this._authService.getToken() + '';
+      const token = `${this._authService.getToken()}`
       const userPayload: any = jwtDecode(token);
       this.username = userPayload.name;
     }
@@ -31,6 +35,6 @@ export class HeaderComponent implements OnInit {
   }
   logout() {
     this._authService.logout();
-    this._router.navigate(['/sign-in']);
+    this._router.navigate([environment.urlFrontend.signIn]);
   }
 }

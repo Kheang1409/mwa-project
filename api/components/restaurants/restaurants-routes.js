@@ -10,9 +10,6 @@ router.route(process.env.URL_EMPTY)
     .get(restaurantController.getAllRestaurant)
     .post(auth_controller.isValidToken, restaurantController.createRestaurant)
 
-router.route('/test').get(auth_controller.isValidTokenTest);
-//auth_controller.isValidToken,
-
 router.route(process.env.URL_TOTAL)
     .get(restaurantController.getTotalRestaurants)
 

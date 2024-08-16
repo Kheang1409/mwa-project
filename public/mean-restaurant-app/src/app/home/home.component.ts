@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-home',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  title: string = 'Restos'
+  title: string = environment.application.name;
+  description: string = environment.application.description;
 }

@@ -5,6 +5,7 @@ import { UsersDataService } from '../users-data.service';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-register',
@@ -18,8 +19,8 @@ export class RegisterComponent implements OnInit {
   user!: User;
 
 
-  createdFailMessage: string = '';
-  isCreatedFail: boolean = false;
+  createFailMessage: string = '';
+  isCreateFail: boolean = false;
 
   constructor(private _formBuilder: FormBuilder, private _usersService: UsersDataService, private _authService: AuthService, private _router: Router) {
     this.user = new User();
@@ -31,30 +32,32 @@ export class RegisterComponent implements OnInit {
         name: '',
         username: '',
         password: '',
-        comfirm_password: ''
+        comfirmPassword: ''
       }
     )
   }
 
   register() {
-    this.user.fill(this.userForm);
-    this._usersService.createUser(this.user).subscribe(
-      {
-        next: (user) => {
-          this.createdFailMessage = '';
-          this.isCreatedFail = false;
-        },
-        error: (error) => {
-          this.createdFailMessage = 'Create unsuccessfully!';
-          this.isCreatedFail = true;
-        },
-        complete: () => {
-          if (!this.isCreatedFail) {
-            this.loginToken(this.user)
+    if (!this.isBlanked()) {
+      this.user.fill(this.userForm);
+      this._usersService.createUser(this.user).subscribe(
+        {
+          next: (user) => {
+            this.createFailMessage = '';
+            this.isCreateFail = false;
+          },
+          error: (error) => {
+            this.createFailMessage = environment.message.createFailMessage;
+            this.isCreateFail = true;
+          },
+          complete: () => {
+            if (!this.isCreateFail) {
+              this.loginToken(this.user)
+            }
           }
         }
-      }
-    )
+      )
+    }
   }
   loginToken(user: User) {
     this._usersService.getToken(user).subscribe(
@@ -73,7 +76,21 @@ export class RegisterComponent implements OnInit {
   }
   redirectToHomePageIfLogged() {
     if (this._authService.isLoggedIn()) {
-      this._router.navigate(['/home']);
+      this._router.navigate([environment.urlFrontend.home]);
     }
+  }
+  isBlanked() {
+    if (this.userForm.value.username === '' || this.userForm.value.password === '') {
+      this.createFailMessage = environment.message.missingUsernamePassword;
+      this.isCreateFail = true;
+
+      return true;
+    }
+    else if (this.userForm.value.password !== this.userForm.value.comfirmPassword) {
+      this.createFailMessage = environment.message.passwordMissedMatch;
+      this.isCreateFail = true;
+      return true;
+    }
+    return false;
   }
 }

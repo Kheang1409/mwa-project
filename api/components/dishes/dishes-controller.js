@@ -31,7 +31,7 @@ const _getIfFoundAnyDishes = function (dishes) {
         message: process.env.NOT_FOUND_MESSAGE
     }
     return new Promise((resolve, reject) => {
-        if (dishes.length > 0)
+        if (dishes.length > process.env.EMPTY)
             resolve(dishes);
         else
             reject(error);
@@ -174,7 +174,6 @@ const fineDishById = function (req, res) {
     let restaurantId = req.params.restaurantId;
     let dishId = req.params.dishId;
     let response = _setDefaultResponse(process.env.GET_CODE, {});
-    console.log(dishId, restaurantId);
     if (!mongoose.isValidObjectId(restaurantId) || !mongoose.isValidObjectId(dishId)) {
         response.status = process.env.BAD_REQUEST_CODE;
         response.data = { message: process.env.INVALID_TYPE_MESSAGE };

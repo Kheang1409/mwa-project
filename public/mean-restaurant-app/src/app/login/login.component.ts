@@ -5,6 +5,7 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { User } from '../user';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-login',
@@ -28,13 +29,15 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this._formBuilder.group({
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     });
   }
   login() {
-    this.user.fill(this.loginForm);
-    this.getToken(this.user);
+    if (!this.isBlank()) {
+      this.user.fill(this.loginForm);
+      this.getToken(this.user);
+    }
   }
   getToken(user: User) {
     this._usersService.getToken(user).subscribe(
@@ -45,7 +48,7 @@ export class LoginComponent implements OnInit {
           this._authService.setToken(token);
         },
         error: (error) => {
-          this.unauthorizedMessage = 'Unauthorized!';
+          this.unauthorizedMessage = environment.message.unauthorizedMessage;
           this.isUnauthorized = true;
         },
         complete: () => {
@@ -60,7 +63,15 @@ export class LoginComponent implements OnInit {
   }
   redirectToHomePageIfLogged() {
     if (this._authService.isLoggedIn()) {
-      this._router.navigate(['/home']);
+      this._router.navigate([environment.urlFrontend.home]);
     }
+  }
+  isBlank(): boolean {
+    if (this.loginForm.value.password === '' || this.loginForm.value.username === '') {
+      this.unauthorizedMessage = environment.message.missingUsernamePassword;
+      this.isUnauthorized = true;
+      return true;
+    }
+    return false;
   }
 }

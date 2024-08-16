@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Token } from './token';
+import { environment } from '../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class AuthService {
     this.#token = token;
   }
 
-  private tokenKey = 'authToken';
+  private tokenKey = environment.keys.tokenKey;
 
   setToken(token: Token) {
     this.#token = token;

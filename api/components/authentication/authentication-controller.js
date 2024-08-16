@@ -71,7 +71,6 @@ const _jwtVerifyWithPromisify = promisify(jwt.verify);
 
 
 const login = function (req, res) {
-    console.log(req.body);
     let username = req.body.username;
     let password = req.body.password;
     let response = _setDefaultResponse(process.env.POST_CODE, {});
@@ -103,7 +102,7 @@ const isTokenProvided = function (token) {
 }
 
 const isValidToken = function (req, res, next) {
-    const token = req.headers['authorization'];
+    const token = req.headers[process.env.AUTHORIZATION];
     let response = _setDefaultResponse(process.env.NOT_PROVIDE_TOKEN_CODE, {});
     let isTokenValid = true;
     isTokenProvided(token)
@@ -113,19 +112,7 @@ const isValidToken = function (req, res, next) {
         .finally(() => { if (!isTokenValid) _sendResponse(res, response) })
 }
 
-const isValidTokenTest = function (req, res, next) {
-    const token = req.headers['authorization'];
-    let response = _setDefaultResponse(process.env.NOT_PROVIDE_TOKEN_CODE, {});
-    let isTokenValid = true;
-    isTokenProvided(token)
-        .then(token => _jwtVerifyWithPromisify(token, process.env.JWT_SECRET))
-        .then(data => res.status(200).json(data))
-        .catch(error => { console.log(error); isTokenValid = false; _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, error.message) })
-        .finally(() => { if (!isTokenValid) _sendResponse(res, response) })
-}
-
 module.exports = {
     login,
     isValidToken,
-    isValidTokenTest
 }
