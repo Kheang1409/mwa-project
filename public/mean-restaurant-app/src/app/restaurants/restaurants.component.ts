@@ -84,6 +84,8 @@ export class RestaurantsComponent implements OnInit {
         this.restaurants = [];
       },
       complete: () => {
+        this.previouseDisable = false;
+        this.nextDisable = false;
 
       }
     });
