@@ -18,7 +18,7 @@ const listenCallBack = function () {
 
 app.use(process.env.API_SUBSET_ROUTE, function (req, res, next) {
     res.header(process.env.ACCESS_CONTROL_ALLOW_ORIGIN, process.env.APPLICATION);
-    res.header(process.env.CONTROL_ALLOW_METHODS, process.env.METHODS);
+    res.header(process.env.ACCESS_CONTROL_ALLOW_METHODS, process.env.METHODS);
     res.header(process.env.ACCESS_CONTROL_ALLOW_HEADERS, process.env.HEADERS);
     next();
 });
