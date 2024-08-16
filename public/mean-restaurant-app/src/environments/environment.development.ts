@@ -33,7 +33,8 @@ export const environment = {
         total: 'totals',
         dishes: 'dishes',
         query: {
-            pageNumber: '?pageNumber='
+            pageNumber: 'pageNumber',
+            name: 'name'
         },
     },
     message: {

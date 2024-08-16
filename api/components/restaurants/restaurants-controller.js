@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const promisify = require('util').promisify;
 
 const RESTAURANT_MODEL = process.env.RESTAURANT_MODEL;
 
@@ -26,12 +24,9 @@ const restaurantModelFindByIdAndDeleteExec = function (id) {
     return restaurantModel.findByIdAndDelete(id).exec();
 }
 
-const restaurantModelFindAndCountExec = function () {
-    return restaurantModel.find().countDocuments();
+const restaurantModelFindAndCountExec = function (query) {
+    return restaurantModel.find(query).countDocuments();
 }
-
-
-const _jwtVerifyWithPromisify = promisify(jwt.verify);
 
 const _setDefaultResponse = function (statusCode, data) {
     return response = {
@@ -47,22 +42,6 @@ const _setErrorResponse = function (response, statusCode, message) {
 
 const _sendReponse = function (res, response) {
     res.status(parseInt(response.status)).json(response.data);
-}
-
-const isTokenProvided = function (token) {
-    const error = {
-        status: process.env.NOT_PROVIDE_TOKEN_CODE,
-        message: process.env.NOT_PROVIDE_TOKEN_MESSAGE
-    }
-
-    return new Promise((resovle, reject) => {
-        if (token) {
-            resovle(token);
-        }
-        else {
-            reject(error);
-        }
-    })
 }
 
 const _IfFoundAnyRestaurants
@@ -147,8 +126,8 @@ const _setGeoSearch = function (let, len) {
                     type: process.env.GEOMETRY_TYPE,
                     coordinates: [let, len]
                 },
-                $maxDistance: process.env.MAX_DISTANCE, // Optional: specify if needed
-                $minDistance: process.env.MIN_DISTANCE // Optional: specify if needed
+                $maxDistance: process.env.MAX_DISTANCE,
+                $minDistance: process.env.MIN_DISTANCE
             }
         }
     }
@@ -164,7 +143,9 @@ const getAllRestaurant = function (req, res) {
     if (req.query.lat && req.query.len) {
         query = _setGeoSearch(req.query.len, eq.query.lat)
     }
-
+    if (req.query && req.query.name) {
+        query = { name: new RegExp(req.query.name, 'i') }
+    }
     if (req.query && req.query.offset) {
         if (isNaN(req.query.offset) == true) {
             _setErrorResponse(response, process.env.BAD_REQUEST_CODE, process.env.OFFSET_COUNT_MUST_BE_NUMBER_MESSAGE)
@@ -277,7 +258,11 @@ const deleteRestaurant = function (req, res) {
 
 const getTotalRestaurants = function (req, res) {
     let response = _setDefaultResponse(process.env.GET_CODE, {})
-    restaurantModelFindAndCountExec()
+    let query = {};
+    if (req.query && req.query.name) {
+        query = { name: new RegExp(req.query.name, 'i') }
+    }
+    restaurantModelFindAndCountExec(query)
         .then(totalRestaurants => response.data = totalRestaurants)
         .catch(error => _setErrorResponse(response, error.status || process.env.SOMETHING_WRONG_CODE, { message: error.message }))
         .finally(() => _sendReponse(res, response));

@@ -17,16 +17,29 @@ export class RestaurantsDataService {
 
   constructor(private _httpClient: HttpClient) { }
 
-  getRestaurants(pageNumber: number): Observable<Restaurant[]> {
-    const url: string = this._baseUrl + environment.urlApi.query.pageNumber + pageNumber;
+  getRestaurants(pageNumber: number, name: string | null): Observable<Restaurant[]> {
+    let url: string = this._baseUrl
+    if (pageNumber || (name && name !== ''))
+      url = `${url}?`;
+    if (pageNumber) {
+      url = `${url}${environment.urlApi.query.pageNumber}=${pageNumber}`
+    }
+    if (name && name !== '') {
+      if (pageNumber)
+        url = `${url}&`
+      url = `${url}${environment.urlApi.query.name}=${name}`
+    }
     return this._httpClient.get<Restaurant[]>(url);
   }
   getRestaurant(restaurantId: string): Observable<Restaurant> {
     const url: string = `${this._baseUrl}/${restaurantId}`;
     return this._httpClient.get<Restaurant>(url);
   }
-  getTotalRestaurants(): Observable<number> {
-    const url: string = `${this._baseUrl}/${environment.urlApi.total}`;
+  getTotalRestaurants(name: string | null): Observable<number> {
+    let url: string = `${this._baseUrl}/${environment.urlApi.total}`;
+    if (name && name !== '') {
+      url = `${url}?${environment.urlApi.query.name}=${name}`
+    }
     return this._httpClient.get<number>(url);
   }
   addRestaurant(restaurant: Restaurant): Observable<Restaurant> {

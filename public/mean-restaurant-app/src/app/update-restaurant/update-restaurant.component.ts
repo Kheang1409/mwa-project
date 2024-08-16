@@ -61,7 +61,7 @@ export class UpdateRestaurantComponent implements OnInit {
   }
 
   isBlank(): boolean {
-    if (this.restaurant.name === '' || this.restaurant.publishedYear === 0 || this.restaurant.about === '' || this.restaurant.logo === '' || this.restaurant.location.city === '' || this.restaurant.location.state === '' || this.restaurant.location.country === '') {
+    if (this.restaurant.name === '' || this.restaurant.publishedYear === null || this.restaurant.about === '' || this.restaurant.logo === '' || this.restaurant.location.city === '' || this.restaurant.location.state === '' || this.restaurant.location.country === '') {
       this.updateFailMessage = environment.message.filledInTheBlank;
       this.isUpdateFail = true;
       return true;

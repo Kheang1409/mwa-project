@@ -3,11 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { RestaurantsDataService } from '../restaurants-data.service';
 import { Restaurant } from '../restaurant';
 import { environment } from '../../environments/environment.development';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-restaurants',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './restaurants.component.html',
   styleUrl: './restaurants.component.css'
 })
@@ -22,6 +23,8 @@ export class RestaurantsComponent implements OnInit {
   total_page!: number;
   restaurants: Restaurant[] = new Array<Restaurant>();
 
+  searchQuery: string = '';
+
   constructor(private _restaurantsService: RestaurantsDataService) {
     this.page = sessionStorage.getItem(this.pageNumberKey) == null ? environment.numbers.page : Number(sessionStorage.getItem(this.pageNumberKey))
   }
@@ -31,7 +34,7 @@ export class RestaurantsComponent implements OnInit {
       this.nextDisable = false;
       this.page--;
       this.setPageNumber(this.page);
-      this.getRestaurants(this.page);
+      this.getRestaurants(this.page, this.searchQuery);
     }
     else {
       this.previouseDisable = true;
@@ -45,23 +48,47 @@ export class RestaurantsComponent implements OnInit {
     else {
       this.page++;
       this.setPageNumber(this.page);
-      this.getRestaurants(this.page);
+      this.getRestaurants(this.page, null);
       this.previouseDisable = false;
     }
   }
   ngOnInit(): void {
-    this.getRestaurants(this.page)
-    this._restaurantsService.getTotalRestaurants().subscribe(restaurants => {
+    this.getTotalPage(this.searchQuery)
+    this.getRestaurants(this.page, this.searchQuery);
+  }
+
+  getTotalPage(name: string | null) {
+    this._restaurantsService.getTotalRestaurants(name).subscribe(restaurants => {
       this.total_page = Math.ceil(restaurants / environment.numbers.limit);
+      if (this.total_page < 1) {
+        this.total_page = 1;
+      }
     });
   }
-  getRestaurants(pageNumber: number): void {
-    this._restaurantsService.getRestaurants(pageNumber).subscribe(restaurants => {
+  getRestaurants(pageNumber: number, name: string | null): void {
+    this._restaurantsService.getRestaurants(pageNumber, name).subscribe(restaurants => {
       this.restaurants = restaurants;
+    });
+
+    this._restaurantsService.getRestaurants(pageNumber, name).subscribe({
+      next: (restaurants) => {
+        this.restaurants = restaurants;
+      },
+      error: (error) => {
+        this.restaurants = [];
+      },
+      complete: () => {
+
+      }
     });
   }
   setPageNumber(page: number) {
     this.page = page;
     sessionStorage.setItem(this.pageNumberKey, `${page}`);
+  }
+
+  searchRestaurants() {
+    this.getTotalPage(this.searchQuery)
+    this.getRestaurants(this.page, this.searchQuery)
   }
 }

@@ -1,6 +1,8 @@
 <div id="menu">
     <div class="heading">
         <h1>Restaurants</h1>
+        <input type="text" class="inp_box" [(ngModel)]="searchQuery" placeholder="Search restaurants">
+        <button class="btn" (click)="searchRestaurants()">Search</button>
     </div>
     <div class="card" *ngFor="let restaurant of restaurants">
         <img src="{{restaurant.logo}}">
